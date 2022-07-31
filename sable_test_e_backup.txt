@@ -18,10 +18,7 @@ Helpers
  coment_linha = '--';
  chv_esq = '{';
  chv_dir = '}';
- col_esq = '[';
- col_dir = ']';
  separador = '|';
- 
  
 Tokens
 
@@ -31,6 +28,15 @@ Tokens
  declarar_termine = 'termine';
  estrutura_funcao = 'funcao:';
  estrutura_procedimento = 'procedimento:';
+ 
+ /* Estruturas */
+ 
+ estrutura_enquanto = 'enquanto';
+ estrutura_se = 'se';
+ estrutura_senao = 'senao';
+ funcao_imprima = 'imprima';
+ funcao_leia = 'leia()';
+ funcao_size = 'size()';
  
  /*Declaracoes de variaveis */
  
@@ -46,15 +52,6 @@ Tokens
  bool_valor_f = 'falso';
  
  declarar_procedimento = caractere+(caractere|digito|underscore)*'()';
- 
- 
- /* Estruturas */
- 
- estrutura_enquanto = 'enquanto';
- estrutura_se = 'se';
- estrutura_senao = 'senao';
- funcao_imprima = 'imprima' '(' (aspa_simple|digito+|caractere+)* ')';
- 
  
  /* Operadores */
  
@@ -75,14 +72,14 @@ Tokens
  
  /* Tipos primitivos */
  
- cadeia_valida = aspa_simple(digito|caractere|especiais|acentos_especiais|virgula|nl|espaco)*aspa_simple;
+ cadeia_valida = aspa_simple(digito|caractere|especiais|acentos_especiais|virgula|| (espaco | rc | nl | tab)+)*aspa_simple;
  numero = digito+;
  numero_real = digito+(virgula*)+digito+;
  identificador = (caractere+ | underscore*)+(caractere|digito|underscore)*;
- declarar_tamanho_vetor = col_esq(digito+)col_dir;
+ /*declarar_tamanho_vetor = col_esq(digito+)col_dir;*/
 
- 
- /* Parenteses */
+ col_esq = '[';
+ col_dir = ']';
  
  par_esq = '(';
  par_dir = ')';
@@ -91,8 +88,8 @@ Tokens
  brk_ln = ';';
  
  /* Comentarios */ 
- linha_comment = coment_linha (digito|caractere|especiais|acentos_especiais|virgula|espaco|tab)*;
- bloco_comment = chv_esq (digito|caractere|especiais|acentos_especiais|virgula|espaco|tab|nl)* chv_dir;
+ linha_comment = coment_linha (digito|caractere|especiais|acentos_especiais|virgula| (espaco | rc | nl | tab)+)*;
+ bloco_comment = chv_esq (digito|caractere|especiais|acentos_especiais|virgula | (espaco | rc | nl | tab)+)*chv_dir;
  
  vazio = (espaco | rc | nl | tab)+;
  caract_especial = especiais+;
