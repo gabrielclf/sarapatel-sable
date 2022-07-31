@@ -44,6 +44,8 @@ Tokens
  bool_valor_v = 'verdade';
  bool_valor_f = 'falso';
  
+ declarar_procedimento = caractere+(caractere|digito|underscore)*'()';
+ 
  
  /* Estruturas */
  
@@ -77,6 +79,7 @@ Tokens
  numero_real = digito+(virgula*)+digito+;
  identificador = (caractere+ | underscore*)+(caractere|digito|underscore)*;
  declarar_tamanho_vetor = col_esq(digito+)col_dir;
+
  
  /* Parenteses */
  
