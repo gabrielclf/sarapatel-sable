@@ -1,0 +1,98 @@
+Package calculadora;
+
+Helpers
+/* Correspondentes em ASCII */
+ especiais = ([33..38]|42|46|47|58|63|64|96|126);
+ virgula = 44;
+ aspa_simple = 39;
+ rc = 13;
+ nl = 10;
+ tab = 09;
+ underscore = 95;
+ 
+/* Helpers mais especificos */
+ digito = ['0' .. '9'];
+ caractere = (['a' .. 'z'] | ['A' .. 'Z']);
+ espaco = ' ';
+ coment_linha = '--';
+ chv_esq = '{';
+ chv_dir = '}';
+ col_esq = '[';
+ col_dir = ']';
+ separador = '|';
+ 
+ 
+Tokens
+
+/* Blocos */
+
+ declarar_comeco = 'comeco';
+ declarar_fim = 'fim';
+ estrutura_funcao = 'funcao';
+ estrutura_procedimento = 'procedimento';
+ 
+ /*Declaracoes de variaveis */
+ 
+ declarar_variavel = 'var';
+ 
+ tipo_inteiro = 'inteiro';
+ tipo_real = 'real';
+ tipo_cadeia = 'cadeia';
+ 
+ tipo_booleano = 'booleano';
+ 
+ bool_valor_v = 'verdade';
+ bool_valor_f = 'falso';
+ 
+ 
+ /* Estruturas */
+ 
+ estrutura_enquanto = 'enquanto';
+ estrutura_se = 'se';
+ estrutura_senao = 'senao';
+ 
+ 
+ 
+ /* Operadores */
+ 
+ atribuicao = '<<';
+ operador_ari_soma = '+';
+ operador_ari_subtracao = '-';
+ operador_ari_mult = '*';
+ operador_ari_div = '/';
+ operador_ari_mod = '%';
+ operador_rel_maior = '>';
+ operador_rel_menor = '<';
+ operador_rel_maiorigual = '>=';
+ operador_rel_menorigual = '<=';
+ operador_rel_igual = '=';
+ operador_logic_and = 'e';
+ operador_logic_or = 'ou';
+ operador_logic_not = 'nao';
+ 
+ /* Tipos primitivos */
+ 
+ cadeia_valida = aspa_simple(caractere+)(nl*)aspa_simple;
+ numero = digito+;
+ numero_real = digito+(virgula*)+digito+;
+ identificador = (caractere+ | underscore*)+(caractere|digito|underscore)*;
+ declarar_tamanho_vetor = col_esq(digito+)col_dir;
+ 
+ /* Parenteses */
+ 
+ par_esq = '(';
+ par_dir = ')';
+ 
+ /* Fim de linha */
+ brk_ln = ';';
+ 
+ /* Comentarios */ 
+ linha_comment = coment_linha (espaco|digito|caractere | tab)*;
+ bloco_comment = chv_esq (espaco|digito|caractere | nl | tab)* chv_dir;
+ 
+ vazio = (espaco | rc | nl | tab)+;
+ caract_especial = especiais+;
+
+
+Ignored Tokens
+ vazio,caract_especial,linha_comment,bloco_comment;
