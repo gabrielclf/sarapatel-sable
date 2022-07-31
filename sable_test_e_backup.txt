@@ -28,8 +28,8 @@ Tokens
 
  declarar_comeco = 'comeco';
  declarar_fim = 'fim';
- estrutura_funcao = 'funcao';
- estrutura_procedimento = 'procedimento';
+ estrutura_funcao = 'funcao:';
+ estrutura_procedimento = 'procedimento:';
  
  /*Declaracoes de variaveis */
  
