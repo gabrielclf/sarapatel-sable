@@ -52,7 +52,7 @@ Tokens
  estrutura_enquanto = 'enquanto';
  estrutura_se = 'se';
  estrutura_senao = 'senao';
- 
+ funcao_imprima = 'imprima' '(' (aspa_simple|digito+|caractere+)* ')';
  
  
  /* Operadores */
