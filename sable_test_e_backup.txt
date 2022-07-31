@@ -3,6 +3,7 @@ Package calculadora;
 Helpers
 /* Correspondentes em ASCII */
  especiais = ([33..38]|42|46|47|58|63|64|96|126);
+ acentos_especiais = ([192..246] | [248..255]);
  virgula = 44;
  aspa_simple = 39;
  rc = 13;
@@ -26,8 +27,8 @@ Tokens
 
 /* Blocos */
 
- declarar_comece = 'comece';
- declarar_fim = 'fim';
+ declarar_comeco = 'comece';
+ declarar_termine = 'termine';
  estrutura_funcao = 'funcao:';
  estrutura_procedimento = 'procedimento:';
  
@@ -74,7 +75,7 @@ Tokens
  
  /* Tipos primitivos */
  
- cadeia_valida = aspa_simple(caractere+)(nl*)aspa_simple;
+ cadeia_valida = aspa_simple(digito|caractere|especiais|acentos_especiais|virgula|nl|espaco)*aspa_simple;
  numero = digito+;
  numero_real = digito+(virgula*)+digito+;
  identificador = (caractere+ | underscore*)+(caractere|digito|underscore)*;
@@ -90,11 +91,12 @@ Tokens
  brk_ln = ';';
  
  /* Comentarios */ 
- linha_comment = coment_linha (espaco|digito|caractere | tab)*;
- bloco_comment = chv_esq (espaco|digito|caractere | nl | tab)* chv_dir;
+ linha_comment = coment_linha (digito|caractere|especiais|acentos_especiais|virgula|espaco|tab)*;
+ bloco_comment = chv_esq (digito|caractere|especiais|acentos_especiais|virgula|espaco|tab|nl)* chv_dir;
  
  vazio = (espaco | rc | nl | tab)+;
  caract_especial = especiais+;
+ acentuadas = acentos_especiais*;
 
 
 Ignored Tokens
