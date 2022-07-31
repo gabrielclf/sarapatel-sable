@@ -26,7 +26,7 @@ Tokens
 
 /* Blocos */
 
- declarar_comeco = 'comeco';
+ declarar_comece = 'comece';
  declarar_fim = 'fim';
  estrutura_funcao = 'funcao:';
  estrutura_procedimento = 'procedimento:';
