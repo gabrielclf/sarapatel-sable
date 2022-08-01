@@ -2,7 +2,7 @@ Package calculadora;
 
 Helpers
 /* Correspondentes em ASCII */
- especiais = ([33..38]|42|46|47|58|63|64|96|126);
+ especiais = ([33..39]|42|45|46|47|58|63|64|96|126);
  acentos_especiais = ([192..246] | [248..255]);
  virgula = 44;
  aspa_simple = 39;
@@ -18,7 +18,7 @@ Helpers
  coment_linha = '--';
  chv_esq = '{';
  chv_dir = '}';
- separador = '|';
+
  
 Tokens
 
@@ -40,7 +40,7 @@ Tokens
  
  /*Declaracoes de variaveis */
  
- declarar_variavel = 'var';
+ declarar_variavel = 'var:'| 'var :' ;
  
  tipo_inteiro = 'inteiro';
  tipo_real = 'real';
@@ -51,7 +51,7 @@ Tokens
  bool_valor_v = 'verdade';
  bool_valor_f = 'falso';
  
- declarar_procedimento = caractere+(caractere|digito|underscore)*'()';
+ /*declarar_procedimento = caractere+(caractere|digito|underscore)*'()'; */
  
  /* Operadores */
  
@@ -69,6 +69,7 @@ Tokens
  operador_logic_and = 'e';
  operador_logic_or = 'ou';
  operador_logic_not = 'nao';
+ separador = '|';
  
  /* Tipos primitivos */
  
@@ -88,8 +89,8 @@ Tokens
  brk_ln = ';';
  
  /* Comentarios */ 
- linha_comment = coment_linha (digito|caractere|especiais|acentos_especiais|virgula| (espaco | rc | nl | tab)+)*;
- bloco_comment = chv_esq (digito|caractere|especiais|acentos_especiais|virgula | (espaco | rc | nl | tab)+)*chv_dir;
+ linha_comment = coment_linha (digito|caractere|especiais|acentos_especiais|virgula|(espaco| tab)+)*;
+ bloco_comment = chv_esq (digito|caractere|especiais|acentos_especiais|virgula|(espaco | rc | nl | tab)+)*chv_dir;
  
  vazio = (espaco | rc | nl | tab)+;
  caract_especial = especiais+;
