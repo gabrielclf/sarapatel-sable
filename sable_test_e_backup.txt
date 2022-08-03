@@ -2,7 +2,8 @@ Package calculadora;
 
 Helpers
 /* Correspondentes em ASCII */
- especiais = ([33..39]|42|45|46|47|58|63|64|96|126);
+ /*especiais = ([33..39]|42|45|46|47|58|63|64|96|126);*/
+ especiais = ([33..122]|124|126|[161..255]);
  acentos_especiais = ([192..246] | [248..255]);
  virgula = 44;
  aspa_simple = 39;
@@ -18,6 +19,7 @@ Helpers
  coment_linha = '--';
  chv_esq = '{';
  chv_dir = '}';
+ dois_pontos = ':';
 
  
 Tokens
@@ -26,8 +28,8 @@ Tokens
 
  declarar_comeco = 'comece';
  declarar_termine = 'termine';
- estrutura_funcao = 'funcao:';
- estrutura_procedimento = 'procedimento:';
+ estrutura_funcao = 'funcao'(espaco|tab)* dois_pontos;
+ estrutura_procedimento = 'procedimento'(espaco|tab)* dois_pontos;
  
  /* Estruturas */
  
@@ -40,7 +42,7 @@ Tokens
  
  /*Declaracoes de variaveis */
  
- declarar_variavel = 'var:'| 'var :' ;
+ declarar_variavel = 'var'(espaco|tab)* ;
  
  tipo_inteiro = 'inteiro';
  tipo_real = 'real';
@@ -50,8 +52,6 @@ Tokens
  
  bool_valor_v = 'verdade';
  bool_valor_f = 'falso';
- 
- /*declarar_procedimento = caractere+(caractere|digito|underscore)*'()'; */
  
  /* Operadores */
  
@@ -73,12 +73,13 @@ Tokens
  
  /* Tipos primitivos */
  
- cadeia_valida = aspa_simple(digito|caractere|especiais|acentos_especiais|virgula|| (espaco | rc | nl | tab)+)*aspa_simple;
  numero = digito+;
  numero_real = digito+(virgula*)+digito+;
  identificador = (caractere+ | underscore*)+(caractere|digito|underscore)*;
- /*declarar_tamanho_vetor = col_esq(digito+)col_dir;*/
+ cadeia_valida = aspa_simple(digito|caractere|especiais|acentos_especiais|virgula|(espaco | rc | nl | tab)+)*aspa_simple;
 
+ 
+ /*Colchetes e Parenteses*
  col_esq = '[';
  col_dir = ']';
  
@@ -89,13 +90,12 @@ Tokens
  brk_ln = ';';
  
  /* Comentarios */ 
- linha_comment = coment_linha (digito|caractere|especiais|acentos_especiais|virgula|(espaco| tab)+)*;
- bloco_comment = chv_esq (digito|caractere|especiais|acentos_especiais|virgula|(espaco | rc | nl | tab)+)*chv_dir;
+ linha_comment = coment_linha(digito|caractere|especiais|acentos_especiais|virgula|(espaco| tab)+)*;
+ bloco_comment = chv_esq(digito|caractere|especiais|acentos_especiais|virgula|(espaco | rc | nl | tab)+)*chv_dir;
+ 
+ /*Espacos vazios*/
  
  vazio = (espaco | rc | nl | tab)+;
- caract_especial = especiais+;
- acentuadas = acentos_especiais*;
-
 
 Ignored Tokens
- vazio,caract_especial,linha_comment,bloco_comment;
+ vazio,linha_comment,bloco_comment;
