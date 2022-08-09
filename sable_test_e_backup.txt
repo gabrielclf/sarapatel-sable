@@ -2,7 +2,6 @@ Package calculadora;
 
 Helpers
 /* Correspondentes em ASCII */
- /*especiais = ([33..39]|42|45|46|47|58|63|64|96|126);*/
  especiais = ([33..122]|124|126|[161..255]);
  acentos_especiais = ([192..246] | [248..255]);
  virgula = 44;
@@ -62,9 +61,7 @@ Tokens
  operador_ari_div = '/';
  operador_ari_mod = '%';
  operador_rel_maior = '>';
- operador_rel_menor = '<';
  operador_rel_maiorigual = '>=';
- operador_rel_menorigual = '<=';
  operador_rel_igual = '=';
  operador_logic_and = 'e';
  operador_logic_or = 'ou';
