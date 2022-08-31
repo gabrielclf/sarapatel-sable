@@ -42,6 +42,7 @@ Tokens
  /*Declaracoes de variaveis */
  
  declarar_variavel = 'var'(espaco|tab)* ;
+ declarar_constante = 'const'(espaco|tab)* ;
  
  tipo_inteiro = 'inteiro';
  tipo_real = 'real';
