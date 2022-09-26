@@ -6,6 +6,8 @@ Trabalho da disciplina de Compiladores no semestre 2022.1 da UFS
 Correções Pendentes do .sable segundo requisitos da professora:
 *Planilha no Sigaa -> Atividades -> Tarefas*
 
+**Multiplos conflitos encontrados relacionados ao intervalo de caracteres especiais em ASCII**
+
 *  ~~Prefixos de declarações: var const -> Não reconhece const;~~ (ok)
 * Números inteiros em notação decimal -> Lembrar de tratar os números negativos no sintático (observação para depois);
 * ~~Números inteiros em notação binária -> Tratado~~ (ok);
