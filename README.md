@@ -18,3 +18,6 @@ Correções Pendentes do .sable segundo requisitos da professora:
 * ~~Comentários de bloco seguem mesmas regras de C -> Não deu a resposta esperada em 1 dos 4 casos de teste deste critério. Vide casos de teste para entender situações avaliadas~~  (ok, resolvido)
 
 
+**26/09/2022**
+Começo de análise sintática
+
