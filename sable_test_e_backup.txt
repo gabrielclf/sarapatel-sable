@@ -2,7 +2,7 @@ Package calculadora;
 
 Helpers
 /* Correspondentes em ASCII */
- especiais = ([33..122]|124|126|[161..255]);
+ especiais = ([33..38]|[42..90]|92|94|[96..122]|124|126|[161..255]);
  acentos_especiais = ([192..246] | [248..255]);
  virgula = 44;
  aspa_simple = 39;
@@ -14,10 +14,14 @@ Helpers
 /* Helpers mais especificos */
  digito = ['0' .. '9'];
  caractere = (['a' .. 'z'] | ['A' .. 'Z']);
+ base_two = '0' | '1' ;
  espaco = ' ';
  coment_linha = '--';
  chv_esq = '{';
  chv_dir = '}';
+ col_esq = '[';
+ col_dir = ']';
+
  dois_pontos = ':';
 
  
@@ -28,6 +32,7 @@ Tokens
  declarar_comeco = 'comece';
  declarar_termine = 'termine';
  estrutura_funcao = 'funcao'(espaco|tab)* dois_pontos;
+ declarar_procedimento = '>>';
  estrutura_procedimento = 'procedimento'(espaco|tab)* dois_pontos;
  
  /* Estruturas */
@@ -39,10 +44,11 @@ Tokens
  funcao_leia = 'leia()';
  funcao_size = 'size()';
  
- /*Declaracoes de variaveis */
+ dec_variavel = 'var'(espaco|tab)* ;
+ dec_constante = 'const'(espaco|tab)* ;
  
- declarar_variavel = 'var'(espaco|tab)* ;
- declarar_constante = 'const'(espaco|tab)* ;
+ dec_funcao = 'funcao'(espaco|tab)* ;
+ dec_procedimento = 'procedimento'(espaco|tab)* ;
  
  tipo_inteiro = 'inteiro';
  tipo_real = 'real';
@@ -68,28 +74,28 @@ Tokens
  operador_logic_or = 'ou';
  operador_logic_not = 'nao';
  separador = '|';
+ operador_dois_p = dois_pontos;
+ 
+ operador_mc_e = col_esq;
+ operador_mc_d = col_dir;
+ par_esq = '(';
+ par_dir = ')';
  
  /* Tipos primitivos */
  
  numero = digito+;
+ numero_int_binario = '0b'(base_two+);
  numero_real = digito+(virgula*)+digito+;
  identificador = (caractere+ | underscore*)+(caractere|digito|underscore)*;
  cadeia_valida = aspa_simple(digito|caractere|especiais|acentos_especiais|virgula|(espaco | rc | nl | tab)+)*aspa_simple;
-
  
- /*Colchetes e Parenteses*
- col_esq = '[';
- col_dir = ']';
- 
- par_esq = '(';
- par_dir = ')';
  
  /* Fim de linha */
  brk_ln = ';';
  
  /* Comentarios */ 
  linha_comment = coment_linha(digito|caractere|especiais|acentos_especiais|virgula|(espaco| tab)+)*;
- bloco_comment = chv_esq(digito|caractere|especiais|acentos_especiais|virgula|(espaco | rc | nl | tab)+)*chv_dir;
+ bloco_comment = chv_esq(chv_esq|digito|caractere|especiais|acentos_especiais|virgula|(espaco | rc | nl | tab)+)*chv_dir;
  
  /*Espacos vazios*/
  
@@ -97,3 +103,22 @@ Tokens
 
 Ignored Tokens
  vazio,linha_comment,bloco_comment;
+
+ 
+Productions
+
+
+ expr =
+   {fator} fator 
+  |{soma} expr operador_ari_soma fator 
+  |{menos} expr operador_ari_subtracao fator;
+
+ fator =
+   {termo} termo 
+  |{mult} fator operador_ari_mult termo 
+  |{div} fator operador_ari_div termo 
+  |{mod} fator operador_ari_mod termo;
+  
+ termo =
+   {numero} numero 
+  |{par} par_esq expr par_dir;
