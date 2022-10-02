@@ -21,3 +21,7 @@ Correções Pendentes do .sable segundo requisitos da professora:
 **26/09/2022**
 Começo de análise sintática
 
+sites de apoio
+https://cin.ufpe.br/~mvpm/Compiladores/withsablecc.pdf
+https://sablecc.sourceforge.net/grammars/sablecc-2x.sablecc.html
+https://users.pja.edu.pl/~jms/qnx/help/watcom/wd/regexp.html
