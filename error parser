@@ -1,0 +1,507 @@
+Productions 
+
+    programa
+         {-> P.programa  } =
+
+     {avarprocprograma1} P.$declarar_procedimento 
+         {-> New programa.var_proc ([  ], [ $declarar_procedimento.declarar_procedimento  ] )  }   |
+
+     {avarprocprograma2} P.$dec_var P.$declarar_procedimento 
+         {-> New programa.var_proc ([ $dec_var.dec_var  ], [ $declarar_procedimento.declarar_procedimento  ] )  }   |
+
+     {avarfuncprograma1} P.$declarar_funcao 
+         {-> New programa.var_func ([  ], [ $declarar_funcao.declarar_funcao  ] )  }   |
+
+     {avarfuncprograma2} P.$dec_var P.$declarar_funcao 
+         {-> New programa.var_func ([ $dec_var.dec_var  ], [ $declarar_funcao.declarar_funcao  ] )  }   |
+
+     {aconstprocprograma1} P.$declarar_procedimento 
+         {-> New programa.const_proc ([  ], [ $declarar_procedimento.declarar_procedimento  ] )  }   |
+
+     {aconstprocprograma2} P.$dec_const P.$declarar_procedimento 
+         {-> New programa.const_proc ([ $dec_const.dec_const  ], [ $declarar_procedimento.declarar_procedimento  ] )  }   |
+
+     {aconstfuncprograma1} P.$declarar_funcao 
+         {-> New programa.const_func ([  ], [ $declarar_funcao.declarar_funcao  ] )  }   |
+
+     {aconstfuncprograma2} P.$dec_const P.$declarar_funcao 
+         {-> New programa.const_func ([ $dec_const.dec_const  ], [ $declarar_funcao.declarar_funcao  ] )  }  
+     ;
+
+    dec_var
+         {-> P.dec_var  } =
+
+     {variavel} dec_variavel operador_dois_p tipo [id_v]: identificador 
+         {-> New dec_var.variavel (dec_variavel , operador_dois_p , tipo , id_v  )  }   |
+
+     atribuir_a_id eof 
+         {-> New dec_var (atribuir_a_id , eof  )  }  
+     ;
+
+    dec_const
+         {-> P.dec_const  } =
+
+     {constante} dec_constante operador_dois_p tipo [id_c]: identificador 
+         {-> New dec_const.constante (dec_constante , operador_dois_p , tipo , id_c  )  }   |
+
+     atribuir_a_id eof 
+         {-> New dec_const (atribuir_a_id , eof  )  }  
+     ;
+
+    eof
+         {-> P.eof  } =
+
+     {fim_linha} brk_ln 
+         {-> New eof.fim_linha (brk_ln  )  }  
+     ;
+
+    tipo
+         {-> P.tipo  } =
+
+     {tipos} tipo_base 
+         {-> New tipo.tipos (tipo_base  )  }   |
+
+     tipo operador_mc_e exp operador_mc_d 
+         {-> New tipo (tipo , operador_mc_e , exp , operador_mc_d  )  }  
+     ;
+
+    tipo_base
+         {-> P.tipo_base  } =
+
+     {tip_int} tipo_inteiro 
+         {-> New tipo_base.tip_int (tipo_inteiro  )  }   |
+
+     {tip_real} tipo_real 
+         {-> New tipo_base.tip_real (tipo_real  )  }   |
+
+     {tip_cadeia} tipo_cadeia 
+         {-> New tipo_base.tip_cadeia (tipo_cadeia  )  }   |
+
+     {tip_booleano} tipo_booleano 
+         {-> New tipo_base.tip_booleano (tipo_booleano  )  }  
+     ;
+
+    atribuir_a_id
+         {-> P.atribuir_a_id  } =
+
+     {atrib} [id_atrib]: identificador atribuicao exp 
+         {-> New atribuir_a_id.atrib (id_atrib , atribuicao , exp  )  }  
+     ;
+
+    compos_array
+         {-> P.compos_array  } =
+
+     {colchetes} operador_mc_e [id_ar]: identificador 
+         {-> New compos_array.colchetes (operador_mc_e , id_ar  )  }   |
+
+     exp operador_mc_d 
+         {-> New compos_array (exp , operador_mc_d  )  }  
+     ;
+
+    declarar_procedimento
+         {-> P.declarar_procedimento  } =
+
+     {aprocedimentodeclararprocedimento1} dec_procedimento operador_dois_p [id_proc]: identificador par_esq parametro par_dir comando 
+         {-> New declarar_procedimento.procedimento (Null , dec_procedimento , operador_dois_p , id_proc , par_esq , parametro , par_dir , comando  )  }   |
+
+     {aprocedimentodeclararprocedimento2} comeco_procedimento dec_procedimento operador_dois_p [id_proc]: identificador par_esq parametro par_dir comando 
+         {-> New declarar_procedimento.procedimento (comeco_procedimento , dec_procedimento , operador_dois_p , id_proc , par_esq , parametro , par_dir , comando  )  }  
+     ;
+
+    declarar_funcao
+         {-> P.declarar_funcao  } =
+
+     {funcao} dec_funcao operador_dois_p tipo [id_func]: identificador par_esq parametros par_dir exp 
+         {-> New declarar_funcao.funcao (dec_funcao , operador_dois_p , tipo , id_func , par_esq , parametros , par_dir , exp  )  }  
+     ;
+
+    parametros
+         {-> P.parametros  } =
+
+     {aparametrounicoparametros1} 
+         {-> New parametros.parametro_unico (Null  )  }   |
+
+     {aparametrounicoparametros2} parametro 
+         {-> New parametros.parametro_unico (parametro  )  }   |
+
+     {parametros_mult} parametro separador parametros 
+         {-> New parametros.parametros_mult (parametro , separador , parametros  )  }   |
+
+     {aparametrosnullparametros1} 
+         {-> New parametros.parametros_null (Null  )  }   |
+
+     {aparametrosnullparametros2} parametro 
+         {-> New parametros.parametros_null (parametro  )  }  
+     ;
+
+    parametro
+         {-> P.parametro  } =
+
+     {parametro} tipo_parametro [id_param]: identificador 
+         {-> New parametro.parametro (tipo_parametro , id_param  )  }  
+     ;
+
+    tipo_parametro
+         {-> P.tipo_parametro  } =
+
+     {tip_b} tipo_base 
+         {-> New tipo_parametro.tip_b (tipo_base  )  }   |
+
+     {tip_param} tipo_parametro operador_mc_e operador_mc_d 
+         {-> New tipo_parametro.tip_param (tipo_parametro , operador_mc_e , operador_mc_d  )  }  
+     ;
+
+    comando
+         {-> P.comando  } =
+
+     {se} estrutura_se par_esq exp par_dir comando 
+         {-> New comando.se (estrutura_se , par_esq , exp , par_dir , comando  )  }   |
+
+     {senao} estrutura_se par_esq exp par_dir comando estrutura_senao [entao]: comando 
+         {-> New comando.senao (estrutura_se , par_esq , exp , par_dir , comando , estrutura_senao , entao  )  }   |
+
+     {enquanto} estrutura_enquanto par_esq exp par_dir comando 
+         {-> New comando.enquanto (estrutura_enquanto , par_esq , exp , par_dir , comando  )  }   |
+
+     {attribb} atribuir_a_id eof 
+         {-> New comando.attribb (atribuir_a_id , eof  )  }   |
+
+     {call_proc} chamada_procedimento eof 
+         {-> New comando.call_proc (chamada_procedimento , eof  )  }   |
+
+     {blocks} bloco_comandos 
+         {-> New comando.blocks (bloco_comandos  )  }  
+     ;
+
+    bloco_comandos
+         {-> P.bloco_comandos  } =
+
+     {acmdvarblococomandos1} declarar_comeco declarar_termine 
+         {-> New bloco_comandos.cmd_var (declarar_comeco , [  ], [  ], declarar_termine  )  }   |
+
+     {acmdvarblococomandos2} declarar_comeco P.$dec_var declarar_termine 
+         {-> New bloco_comandos.cmd_var (declarar_comeco , [ $dec_var.dec_var  ], [  ], declarar_termine  )  }   |
+
+     {acmdvarblococomandos3} declarar_comeco P.$comando declarar_termine 
+         {-> New bloco_comandos.cmd_var (declarar_comeco , [  ], [ $comando.comando  ], declarar_termine  )  }   |
+
+     {acmdvarblococomandos4} declarar_comeco P.$dec_var P.$comando declarar_termine 
+         {-> New bloco_comandos.cmd_var (declarar_comeco , [ $dec_var.dec_var  ], [ $comando.comando  ], declarar_termine  )  }   |
+
+     {acmdconstblococomandos1} declarar_comeco declarar_termine 
+         {-> New bloco_comandos.cmd_const (declarar_comeco , [  ], [  ], declarar_termine  )  }   |
+
+     {acmdconstblococomandos2} declarar_comeco P.$dec_const declarar_termine 
+         {-> New bloco_comandos.cmd_const (declarar_comeco , [ $dec_const.dec_const  ], [  ], declarar_termine  )  }   |
+
+     {acmdconstblococomandos3} declarar_comeco P.$comando declarar_termine 
+         {-> New bloco_comandos.cmd_const (declarar_comeco , [  ], [ $comando.comando  ], declarar_termine  )  }   |
+
+     {acmdconstblococomandos4} declarar_comeco P.$dec_const P.$comando declarar_termine 
+         {-> New bloco_comandos.cmd_const (declarar_comeco , [ $dec_const.dec_const  ], [ $comando.comando  ], declarar_termine  )  }  
+     ;
+
+    valor
+         {-> P.valor  } =
+
+     {valor_singular} [id_valor]: identificador 
+         {-> New valor.valor_singular (id_valor  )  }   |
+
+     {valor_vetor} valor operador_mc_e exp operador_mc_d 
+         {-> New valor.valor_vetor (valor , operador_mc_e , exp , operador_mc_d  )  }  
+     ;
+
+    exp
+         {-> P.exp  } =
+
+     {inteiro} tipo_inteiro 
+         {-> New exp.inteiro (tipo_inteiro  )  }   |
+
+     {real} tipo_real 
+         {-> New exp.real (tipo_real  )  }   |
+
+     {cadeia} tipo_cadeia 
+         {-> New exp.cadeia (tipo_cadeia  )  }   |
+
+     {booleano} tipo_booleano 
+         {-> New exp.booleano (tipo_booleano  )  }   |
+
+     {exp_valor} valor 
+         {-> New exp.exp_valor (valor  )  }   |
+
+     {parenteses} par_esq exp par_dir 
+         {-> New exp.parenteses (par_esq , exp , par_dir  )  }   |
+
+     {call_func} chamada_funcao 
+         {-> New exp.call_func (chamada_funcao  )  }   |
+
+     {array_comp} compos_array 
+         {-> New exp.array_comp (compos_array  )  }   |
+
+     {negative} operador_ari_subtracao exp 
+         {-> New exp.negative (operador_ari_subtracao , exp  )  }   |
+
+     {sesenao} estrutura_se par_esq [se]: exp par_dir [corresponde]: exp estrutura_senao [senao_isso]: exp 
+         {-> New exp.sesenao (estrutura_se , par_esq , se , par_dir , corresponde , estrutura_senao , senao_isso  )  }   |
+
+     {adicao} [e_soma]: exp operador_ari_soma exp 
+         {-> New exp.adicao (e_soma , operador_ari_soma , exp  )  }   |
+
+     {subtracao} [e_sub]: exp operador_ari_subtracao exp 
+         {-> New exp.subtracao (e_sub , operador_ari_subtracao , exp  )  }   |
+
+     {multiplicacao} [e_mult]: exp operador_ari_mult exp 
+         {-> New exp.multiplicacao (e_mult , operador_ari_mult , exp  )  }   |
+
+     {divisao} [e_div]: exp operador_ari_div exp 
+         {-> New exp.divisao (e_div , operador_ari_div , exp  )  }   |
+
+     {opmod} [e_mod]: exp operador_ari_mod exp 
+         {-> New exp.opmod (e_mod , operador_ari_mod , exp  )  }   |
+
+     {igual} [e_equal]: exp operador_rel_igual exp 
+         {-> New exp.igual (e_equal , operador_rel_igual , exp  )  }   |
+
+     {maiorigual} [e_maig]: exp operador_rel_maiorigual exp 
+         {-> New exp.maiorigual (e_maig , operador_rel_maiorigual , exp  )  }   |
+
+     {maiorq} [e_more]: exp operador_rel_maior exp 
+         {-> New exp.maiorq (e_more , operador_rel_maior , exp  )  }   |
+
+     {nope} operador_logic_not exp 
+         {-> New exp.nope (operador_logic_not , exp  )  }   |
+
+     {and} [e_and]: exp operador_logic_and exp 
+         {-> New exp.and (e_and , operador_logic_and , exp  )  }   |
+
+     {orrr} [e_or]: exp operador_logic_or exp 
+         {-> New exp.orrr (e_or , operador_logic_or , exp  )  }   |
+
+     {bloco_e} bloco_exp 
+         {-> New exp.bloco_e (bloco_exp  )  }  
+     ;
+
+    bloco_exp
+         {-> P.bloco_exp  } =
+
+     {ablococonstblocoexp1} declarar_comeco exp declarar_termine 
+         {-> New bloco_exp.bloco_const (declarar_comeco , [  ], exp , declarar_termine  )  }   |
+
+     {ablococonstblocoexp2} declarar_comeco P.$dec_const exp declarar_termine 
+         {-> New bloco_exp.bloco_const (declarar_comeco , [ $dec_const.dec_const  ], exp , declarar_termine  )  }   |
+
+     {ablocvarblocoexp1} declarar_comeco exp declarar_termine 
+         {-> New bloco_exp.bloc_var (declarar_comeco , [  ], exp , declarar_termine  )  }   |
+
+     {ablocvarblocoexp2} declarar_comeco P.$dec_var exp declarar_termine 
+         {-> New bloco_exp.bloc_var (declarar_comeco , [ $dec_var.dec_var  ], exp , declarar_termine  )  }  
+     ;
+
+    chamada_funcao
+         {-> P.chamada_funcao  } =
+
+     identificador par_esq lista_exp par_dir 
+         {-> New chamada_funcao (identificador , par_esq , lista_exp , par_dir  )  }  
+     ;
+
+    chamada_procedimento
+         {-> P.chamada_procedimento  } =
+
+     identificador par_esq lista_exp par_dir 
+         {-> New chamada_procedimento (identificador , par_esq , lista_exp , par_dir  )  }  
+     ;
+
+    lista_exp
+         {-> P.lista_exp  } =
+
+     {avazioexpslistaexp1} 
+         {-> New lista_exp.vazio_exps (Null  )  }   |
+
+     {avazioexpslistaexp2} exp 
+         {-> New lista_exp.vazio_exps (exp  )  }   |
+
+     {lis_exp} [e_list]: exp separador exp 
+         {-> New lista_exp.lis_exp (e_list , separador , exp  )  }   |
+
+     {exp_adicionais} lista_exp separador exp 
+         {-> New lista_exp.exp_adicionais (lista_exp , separador , exp  )  }  
+     ;
+
+    $declarar_procedimento
+         {-> P.declarar_procedimento*  } =
+
+     {terminal} P.declarar_procedimento 
+         {-> [ P.declarar_procedimento.declarar_procedimento  ]  }   |
+
+     {non_terminal} P.$declarar_procedimento P.declarar_procedimento 
+         {-> [ $declarar_procedimento.declarar_procedimento P.declarar_procedimento.declarar_procedimento  ]  }  
+     ;
+
+    $dec_var
+         {-> P.dec_var*  } =
+
+     {terminal} P.dec_var 
+         {-> [ P.dec_var.dec_var  ]  }   |
+
+     {non_terminal} P.$dec_var P.dec_var 
+         {-> [ $dec_var.dec_var P.dec_var.dec_var  ]  }  
+     ;
+
+    $declarar_funcao
+         {-> P.declarar_funcao*  } =
+
+     {terminal} P.declarar_funcao 
+         {-> [ P.declarar_funcao.declarar_funcao  ]  }   |
+
+     {non_terminal} P.$declarar_funcao P.declarar_funcao 
+         {-> [ $declarar_funcao.declarar_funcao P.declarar_funcao.declarar_funcao  ]  }  
+     ;
+
+    $dec_const
+         {-> P.dec_const*  } =
+
+     {terminal} P.dec_const 
+         {-> [ P.dec_const.dec_const  ]  }   |
+
+     {non_terminal} P.$dec_const P.dec_const 
+         {-> [ $dec_const.dec_const P.dec_const.dec_const  ]  }  
+     ;
+
+    $comando
+         {-> P.comando*  } =
+
+     {terminal} P.comando 
+         {-> [ P.comando.comando  ]  }   |
+
+     {non_terminal} P.$comando P.comando 
+         {-> [ $comando.comando P.comando.comando  ]  }  
+     ;
+
+Abstract Syntax Tree
+    programa =
+     {var_proc} dec_var* declarar_procedimento+ | 
+     {var_func} dec_var* declarar_funcao+ | 
+     {const_proc} dec_const* declarar_procedimento+ | 
+     {const_func} dec_const* declarar_funcao+ 
+     ;
+
+    dec_var =
+     {variavel} dec_variavel operador_dois_p tipo [id_v]: identificador | 
+     atribuir_a_id eof 
+     ;
+
+    dec_const =
+     {constante} dec_constante operador_dois_p tipo [id_c]: identificador | 
+     atribuir_a_id eof 
+     ;
+
+    eof =
+     {fim_linha} brk_ln 
+     ;
+
+    tipo =
+     {tipos} tipo_base | 
+     tipo operador_mc_e exp operador_mc_d 
+     ;
+
+    tipo_base =
+     {tip_int} tipo_inteiro | 
+     {tip_real} tipo_real | 
+     {tip_cadeia} tipo_cadeia | 
+     {tip_booleano} tipo_booleano 
+     ;
+
+    atribuir_a_id =
+     {atrib} [id_atrib]: identificador atribuicao exp 
+     ;
+
+    compos_array =
+     {colchetes} operador_mc_e [id_ar]: identificador | 
+     exp operador_mc_d 
+     ;
+
+    declarar_procedimento =
+     {procedimento} comeco_procedimento? dec_procedimento operador_dois_p [id_proc]: identificador par_esq parametro par_dir comando 
+     ;
+
+    declarar_funcao =
+     {funcao} dec_funcao operador_dois_p tipo [id_func]: identificador par_esq parametros par_dir exp 
+     ;
+
+    parametros =
+     {parametro_unico} parametro? | 
+     {parametros_mult} parametro separador parametros | 
+     {parametros_null} parametro? 
+     ;
+
+    parametro =
+     {parametro} tipo_parametro [id_param]: identificador 
+     ;
+
+    tipo_parametro =
+     {tip_b} tipo_base | 
+     {tip_param} tipo_parametro operador_mc_e operador_mc_d 
+     ;
+
+    comando =
+     {se} estrutura_se par_esq exp par_dir comando | 
+     {senao} estrutura_se par_esq exp par_dir comando estrutura_senao [entao]: comando | 
+     {enquanto} estrutura_enquanto par_esq exp par_dir comando | 
+     {attribb} atribuir_a_id eof | 
+     {call_proc} chamada_procedimento eof | 
+     {blocks} bloco_comandos 
+     ;
+
+    bloco_comandos =
+     {cmd_var} declarar_comeco dec_var* comando* declarar_termine | 
+     {cmd_const} declarar_comeco dec_const* comando* declarar_termine 
+     ;
+
+    valor =
+     {valor_singular} [id_valor]: identificador | 
+     {valor_vetor} valor operador_mc_e exp operador_mc_d 
+     ;
+
+    exp =
+     {inteiro} tipo_inteiro | 
+     {real} tipo_real | 
+     {cadeia} tipo_cadeia | 
+     {booleano} tipo_booleano | 
+     {exp_valor} valor | 
+     {parenteses} par_esq exp par_dir | 
+     {call_func} chamada_funcao | 
+     {array_comp} compos_array | 
+     {negative} operador_ari_subtracao exp | 
+     {sesenao} estrutura_se par_esq [se]: exp par_dir [corresponde]: exp estrutura_senao [senao_isso]: exp | 
+     {adicao} [e_soma]: exp operador_ari_soma exp | 
+     {subtracao} [e_sub]: exp operador_ari_subtracao exp | 
+     {multiplicacao} [e_mult]: exp operador_ari_mult exp | 
+     {divisao} [e_div]: exp operador_ari_div exp | 
+     {opmod} [e_mod]: exp operador_ari_mod exp | 
+     {igual} [e_equal]: exp operador_rel_igual exp | 
+     {maiorigual} [e_maig]: exp operador_rel_maiorigual exp | 
+     {maiorq} [e_more]: exp operador_rel_maior exp | 
+     {nope} operador_logic_not exp | 
+     {and} [e_and]: exp operador_logic_and exp | 
+     {orrr} [e_or]: exp operador_logic_or exp | 
+     {bloco_e} bloco_exp 
+     ;
+
+    bloco_exp =
+     {bloco_const} declarar_comeco dec_const* exp declarar_termine | 
+     {bloc_var} declarar_comeco dec_var* exp declarar_termine 
+     ;
+
+    chamada_funcao =
+     identificador par_esq lista_exp par_dir 
+     ;
+
+    chamada_procedimento =
+     identificador par_esq lista_exp par_dir 
+     ;
+
+    lista_exp =
+     {vazio_exps} exp? | 
+     {lis_exp} [e_list]: exp separador exp | 
+     {exp_adicionais} lista_exp separador exp 
+     ;
