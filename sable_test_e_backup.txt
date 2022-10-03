@@ -31,9 +31,7 @@ Tokens
 
  declarar_comeco = 'comece';
  declarar_termine = 'termine';
- declarar_procedimento = '>>';
 
- 
  /* Estruturas */
  
  estrutura_enquanto = 'enquanto';
@@ -106,8 +104,10 @@ Ignored Tokens
  
 Productions
 
- programa = {proc} declarar_procedimento dec_var|dec_cons 
- |{func} declarar_funcao dec_var|dec_cons;
+  programa = {var_proc}dec_var* declarar_procedimento+
+  |{var_func} dec_var* declarar_funcao+
+  |{const_proc} dec_const* declarar_procedimento+
+  |{const_func} dec_const* declarar_funcao+;
  
  dec_var = {variavel} dec_variavel operador_dois_p tipo  [id_v]:identificador | atribuir_a_id  eof;
  dec_const = {constante} dec_constante operador_dois_p tipo [id_c]:identificador | atribuir_a_id  eof;
@@ -179,5 +179,3 @@ Productions
  lista_exp = {vazio_exps} exp?
  |{lis_exp} exp separador exp
  |{exp_adicionais} lista_exp separador exp;
-
-
