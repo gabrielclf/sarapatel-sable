@@ -31,9 +31,8 @@ Tokens
 
  declarar_comeco = 'comece';
  declarar_termine = 'termine';
- estrutura_funcao = 'funcao'(espaco|tab)* dois_pontos;
  declarar_procedimento = '>>';
- estrutura_procedimento = 'procedimento'(espaco|tab)* dois_pontos;
+
  
  /* Estruturas */
  
@@ -47,13 +46,13 @@ Tokens
  dec_variavel = 'var'(espaco|tab)* ;
  dec_constante = 'const'(espaco|tab)* ;
  
+ comeco_procedimento = '>>';
  dec_funcao = 'funcao'(espaco|tab)* ;
  dec_procedimento = 'procedimento'(espaco|tab)* ;
  
  tipo_inteiro = 'inteiro';
  tipo_real = 'real';
  tipo_cadeia = 'cadeia';
- 
  tipo_booleano = 'booleano';
  
  bool_valor_v = 'verdade';
@@ -107,18 +106,45 @@ Ignored Tokens
  
 Productions
 
+ programa = {proc} declarar_procedimento dec_var|dec_cons 
+ |{func} declarar_funcao dec_var|dec_cons;
+ 
+ dec_var = {variavel} dec_variavel operador_dois_p tipo  [id_v]:identificador | atribuir_a_id  eof;
+ dec_const = {constante} dec_constante operador_dois_p tipo [id_c]:identificador | atribuir_a_id  eof;
+ 
+ eof = {fim_linha} brk_ln;
+ 
+ tipo = {tipos} tipo_base | tipo operador_mc_e exp operador_mc_d;
+ tipo_base = {int} tipo_inteiro
+      |{real} tipo_real
+      |{cadeia} tipo_cadeia
+      |{booleano} tipo_booleano;
+      
+ atribuir_a_id = {atrib} [id_atrib]:identificador atribuicao exp;
+ compos_array = {colchetes} operador_mc_e [id_ar]:identificador | exp operador_mc_d;
+ 
+ declarar_procedimento = {procedimento} comeco_procedimento? dec_procedimento operador_dois_p [id_proc]:identificador par_esq parametro par_dir comando;
+ declarar_funcao = {funcao} dec_funcao operador_dois_p tipo [id_func]:identificador par_esq parametros par_dir exp;
+ 
+ parametros = parametro separador parametro* | parametro?;
+ 
+ parametro = tipo_parametro [id_param]:identificador;
+ 
+ tipo_parametro = tipo_base | tipo_parametro operador_mc_e operador_mc_d;
+ 
+ comando = {se} estrutura_se par_esq exp par_dir comando
+ |{senao} estrutura_se par_esq exp par_dir comando estrutura_senao comando
+ |{enquanto}
+ |{comm_attrib}
+ |{proc_call}
+ |bloco_comandos;
+ 
+ bloco_comandos =
+ valor =
+ exp =
+ bloco_exp =
+ chamada_funcao =
+ chamada_procedimento = 
+ lista_exp =
 
- expr =
-   {fator} fator 
-  |{soma} expr operador_ari_soma fator 
-  |{menos} expr operador_ari_subtracao fator;
 
- fator =
-   {termo} termo 
-  |{mult} fator operador_ari_mult termo 
-  |{div} fator operador_ari_div termo 
-  |{mod} fator operador_ari_mod termo;
-  
- termo =
-   {numero} numero 
-  |{par} par_esq expr par_dir;
