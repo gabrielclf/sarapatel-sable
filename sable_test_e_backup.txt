@@ -115,10 +115,10 @@ Productions
  eof = {fim_linha} brk_ln;
  
  tipo = {tipos} tipo_base | tipo operador_mc_e exp operador_mc_d;
- tipo_base = {int} tipo_inteiro
-      |{real} tipo_real
-      |{cadeia} tipo_cadeia
-      |{booleano} tipo_booleano;
+ tipo_base = {tip_int} tipo_inteiro
+      |{tip_real} tipo_real
+      |{tip_cadeia} tipo_cadeia
+      |{tip_booleano} tipo_booleano;
       
  atribuir_a_id = {atrib} [id_atrib]:identificador atribuicao exp;
  compos_array = {colchetes} operador_mc_e [id_ar]:identificador | exp operador_mc_d;
@@ -146,9 +146,30 @@ Productions
  valor = [id_valor]:identificador
   | valor operador_mc_e exp operador_mc_d;
  
- exp =
+ exp = {inteiro} tipo_inteiro
+ |{real} tipo_real 
+ |{cadeia} tipo_cadeia
+ |{booleano} tipo_booleano
+ |{exp_valor} valor
+ |{parenteses} par_esq exp par_dir
+ |{call_func} chamada_funcao
+ |{array_comp} compos_array
+ |{negative} operador_ari_subtracao exp
+ |{sesenao} estrutura_se par_esq exp par_dir exp estrutura_senao exp
+ |{adicao} exp operador_ari_soma exp 
+ |{subtracao} exp operador_ari_subtracao exp
+ |{multiplicacao} exp operador_ari_mult exp
+ |{divisao} exp operador_ari_div exp
+ |{opmod} exp operador_ari_mod exp
+ |{igual} exp operador_rel_igual exp
+ |{maiorigual} exp operador_rel_maiorigual exp
+ |{maiorq} exp operador_rel_maior exp
+ |{nope} operador_logic_not exp
+ |{and} exp operador_logic_and exp
+ |{orrr} exp operador_logic_or exp
+ |{bloco_e} bloco_exp;
  
- bloco_exp = {bloco_const} declarar_comeco dec_const* exp declarar_termine;
+ bloco_exp = {bloco_const} declarar_comeco dec_const* exp declarar_termine
  |{bloc_var} declarar_comeco dec_var* exp declarar_termine;
  
  chamada_funcao = identificador par_esq lista_exp par_dir;
