@@ -1,0 +1,186 @@
+Package calculadora;
+
+Helpers
+/* Correspondentes em ASCII */
+ especiais = ([33..38]|[42..90]|92|94|[96..122]|124|126|[161..255]);
+ acentos_especiais = ([192..246] | [248..255]);
+ virgula = 44;
+ aspa_simple = 39;
+ rc = 13;
+ nl = 10;
+ tab = 09;
+ underscore = 95;
+ 
+/* Helpers mais especificos */
+ digito = ['0' .. '9'];
+ caractere = (['a' .. 'z'] | ['A' .. 'Z']);
+ base_two = '0' | '1' ;
+ espaco = ' ';
+ coment_linha = '--';
+ chv_esq = '{';
+ chv_dir = '}';
+ col_esq = '[';
+ col_dir = ']';
+
+ dois_pontos = ':';
+
+ 
+Tokens
+
+/* Blocos */
+
+ declarar_comeco = 'comece';
+ declarar_termine = 'termine';
+
+ /* Estruturas */
+ 
+ estrutura_enquanto = 'enquanto';
+ estrutura_se = 'se';
+ estrutura_senao = 'senao';
+ funcao_imprima = 'imprima';
+ funcao_leia = 'leia()';
+ funcao_size = 'size()';
+ 
+ dec_variavel = 'var'(espaco|tab)* ;
+ dec_constante = 'const'(espaco|tab)* ;
+ 
+ comeco_procedimento = '>>';
+ dec_funcao = 'funcao'(espaco|tab)* ;
+ dec_procedimento = 'procedimento'(espaco|tab)* ;
+ 
+ tipo_inteiro = 'inteiro';
+ tipo_real = 'real';
+ tipo_cadeia = 'cadeia';
+ tipo_booleano = 'booleano';
+ 
+ bool_valor_v = 'verdade';
+ bool_valor_f = 'falso';
+ 
+ /* Operadores */
+ 
+ atribuicao = '<<';
+ operador_ari_soma = '+';
+ operador_ari_subtracao = '-';
+ operador_ari_mult = '*';
+ operador_ari_div = '/';
+ operador_ari_mod = '%';
+ operador_rel_maior = '>';
+ operador_rel_maiorigual = '>=';
+ operador_rel_igual = '=';
+ operador_logic_and = 'e';
+ operador_logic_or = 'ou';
+ operador_logic_not = 'nao';
+ separador = '|';
+ operador_dois_p = dois_pontos;
+ 
+ operador_mc_e = col_esq;
+ operador_mc_d = col_dir;
+ par_esq = '(';
+ par_dir = ')';
+ 
+ /* Tipos primitivos */
+ 
+ numero = digito+;
+ numero_int_binario = '0b'(base_two+);
+ numero_real = digito+(virgula*)+digito+;
+ identificador = (caractere+ | underscore*)+(caractere|digito|underscore)*;
+ cadeia_valida = aspa_simple(digito|caractere|especiais|acentos_especiais|virgula|(espaco | rc | nl | tab)+)*aspa_simple;
+ 
+ 
+ /* Fim de linha */
+ brk_ln = ';';
+ 
+ /* Comentarios */ 
+ linha_comment = coment_linha(digito|caractere|especiais|acentos_especiais|virgula|(espaco| tab)+)*;
+ bloco_comment = chv_esq(chv_esq|digito|caractere|especiais|acentos_especiais|virgula|(espaco | rc | nl | tab)+)*chv_dir;
+ 
+ /*Espacos vazios*/
+ 
+ vazio = (espaco | rc | nl | tab)+;
+
+Ignored Tokens
+ vazio,linha_comment,bloco_comment;
+
+ 
+Productions
+
+  programa = {var_proc} dec_var* declarar_procedimento+
+  |{var_func} dec_var* declarar_funcao+
+  |{const_proc} dec_const* declarar_procedimento+
+  |{const_func} dec_const* declarar_funcao+;
+ 
+ dec_var = {variavel} dec_variavel operador_dois_p tipo  [id_v]:identificador | atribuir_a_id  eof;
+ dec_const = {constante} dec_constante operador_dois_p tipo [id_c]:identificador | atribuir_a_id  eof;
+ 
+ eof = {fim_linha} brk_ln;
+ 
+ tipo = {tipos} tipo_base | tipo operador_mc_e exp operador_mc_d;
+ tipo_base = {tip_int} tipo_inteiro
+      |{tip_real} tipo_real
+      |{tip_cadeia} tipo_cadeia
+      |{tip_booleano} tipo_booleano;
+      
+ atribuir_a_id = {atrib} [id_atrib]:identificador atribuicao exp;
+ compos_array = {colchetes} operador_mc_e [id_ar]:identificador | exp operador_mc_d;
+ 
+ declarar_procedimento = {procedimento} comeco_procedimento? dec_procedimento operador_dois_p [id_proc]:identificador par_esq parametro par_dir comando;
+ declarar_funcao = {funcao} dec_funcao operador_dois_p tipo [id_func]:identificador par_esq parametros par_dir exp;
+ 
+ parametros = {parametro_unico} parametro? 
+ |{parametros_mult} parametro separador parametros
+ |{parametros_null} parametro? ;
+ 
+ parametro = {parametro} tipo_parametro [id_param]:identificador;
+ 
+ tipo_parametro = {tip_b} tipo_base 
+ |{tip_param} tipo_parametro operador_mc_e operador_mc_d;
+ 
+ comando = {se} estrutura_se par_esq exp par_dir comando
+ |{senao} estrutura_se par_esq exp par_dir comando estrutura_senao [entao]:comando
+ |{enquanto} estrutura_enquanto par_esq exp par_dir comando
+ |{attribb} atribuir_a_id eof
+ |{call_proc} chamada_procedimento eof
+ |{blocks} bloco_comandos;
+ 
+ bloco_comandos = {cmd_var} declarar_comeco dec_var* comando* declarar_termine
+ |{cmd_const} declarar_comeco dec_const* comando* declarar_termine;
+ 
+ 
+ valor = {valor_singular} [id_valor]:identificador
+  |{valor_vetor} valor operador_mc_e exp operador_mc_d;
+ 
+ exp = {inteiro} tipo_inteiro
+ |{real} tipo_real 
+ |{cadeia} tipo_cadeia
+ |{booleano} tipo_booleano
+ |{exp_valor} valor
+ |{parenteses} par_esq exp par_dir
+ |{call_func} chamada_funcao
+ |{array_comp} compos_array
+ |{negative} operador_ari_subtracao exp
+ |{sesenao} estrutura_se par_esq [se]:exp par_dir [corresponde]:exp estrutura_senao [senao_isso]:exp
+ |{adicao} [e_soma]:exp operador_ari_soma exp 
+ |{subtracao} [e_sub]:exp operador_ari_subtracao exp
+ |{multiplicacao} [e_mult]:exp operador_ari_mult exp
+ |{divisao} [e_div]:exp operador_ari_div exp
+ |{opmod} [e_mod]:exp operador_ari_mod exp
+ |{igual} [e_equal]:exp operador_rel_igual exp
+ |{maiorigual} [e_maig]:exp operador_rel_maiorigual exp
+ |{maiorq} [e_more]:exp operador_rel_maior exp
+ |{nope} operador_logic_not exp
+ |{and} [e_and]:exp operador_logic_and exp
+ |{orrr} [e_or]:exp operador_logic_or exp
+ |{bloco_e} bloco_exp;
+ 
+ bloco_exp = {bloco_const} declarar_comeco dec_const* exp declarar_termine
+ |{bloc_var} declarar_comeco dec_var* exp declarar_termine;
+ 
+ chamada_funcao = identificador par_esq lista_exp par_dir;
+ 
+ chamada_procedimento = identificador par_esq lista_exp par_dir;
+ 
+ lista_exp = {vazio_exps} exp?
+ |{lis_exp} [e_list]:exp separador exp
+ |{exp_adicionais} lista_exp separador exp;
+
+
